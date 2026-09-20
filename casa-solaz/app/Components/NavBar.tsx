@@ -1,5 +1,4 @@
-import Image from "next/image";
-
+import Logo from "@/app/Components/Logo";
 
 export default function NavBar(){
 
@@ -7,7 +6,7 @@ export default function NavBar(){
         <nav className="fixed flex h-[7vh] justify-center w-full bg-[#E8DBD8]/0 text-[#E8D8D8] backdrop-blur-lg font-cormorant">
             <main className="flex container w-full justify-between items-center px-4">
                 <div>
-                    <Image className="flex justify-center text-[#E8D8D8]" src="/Green Logo.svg" alt="Logo" width={100} height={100} />
+                    <Logo className="h-12 w-auto text-[#E8D8D8]"/>
                 </div>
                 <ul className="flex flex-row space-x-4">
                     <li className="hover:text-[#3A4235]"><a href="">Home</a></li>

@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-export default function AboutUsSection() {
+export default function TestimonialSection() {
     return (
         <main className="flex min-h-[90vh] w-full justify-center items-center bg-[#E5E5E5] px-6 py-16 text-[#3C4032] sm:px-10 lg:px-16">
             <section className="flex w-full container flex-col">

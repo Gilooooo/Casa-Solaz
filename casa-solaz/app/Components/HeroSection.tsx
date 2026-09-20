@@ -2,9 +2,9 @@ export default function HeroSection() {
 	return (
 		<section
 			className="flex min-h-screen w-full items-center justify-center bg-cover bg-center"
-			style={{ backgroundImage: "url('/Hero.jpg')" }}
+			style={{ backgroundImage: "url('/Image/HeroPage/Hero.jpg')" }}
 		>
-			<div className="text-center text-[#E8D8D8]">
+			<div className="text-center text-[#E8D8D8] container">
 				<h6 className="text-sm uppercase tracking-[0.3em]">
 					Where Comfort Meets Elegance
 				</h6>

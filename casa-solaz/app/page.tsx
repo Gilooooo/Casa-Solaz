@@ -1,6 +1,11 @@
 import AboutUsSection from "./Components/AboutUsSection";
+import AmenitiesSection from "./Components/AmenitiesSection";
+import FooterSection from "./Components/FooterSection";
 import HeroSection from "./Components/HeroSection";
 import NavBar from "./Components/NavBar";
+import OfferSection from "./Components/OfferSection";
+import OurServicesSection from "./Components/OurServices";
+import TestimonialSection from "./Components/TestimonialSection";
 
 export default function Home() {
   return (
@@ -8,6 +13,11 @@ export default function Home() {
       <NavBar/>
       <HeroSection/>
       <AboutUsSection/>
+      <OurServicesSection/>
+      <AmenitiesSection/>
+      <OfferSection/>
+      <TestimonialSection/>
+      <FooterSection/>
     </main>
   );
 }
