@@ -3,12 +3,12 @@
 import { useEffect, useRef, useState } from "react";
 import Image from "next/image";
 
-const serviceImages = Array.from({ length: 8 }, (_, index) => ({
+const amenityImages = Array.from({ length: 13 }, (_, index) => ({
     id: index + 1,
-    src: `/Image/OurServicesPage/OurService${index + 1}.jpg`,
+    src: `/Image/AmenitiesPage/Amenities${index + 1}.jpg`,
 }));
 
-const carouselImages = [...serviceImages, ...serviceImages.slice(0, 4)];
+const carouselImages = [...amenityImages, ...amenityImages.slice(0, 4)];
 
 export default function AmenitiesSection() {
     const [activeIndex, setActiveIndex] = useState(0);
@@ -33,7 +33,7 @@ export default function AmenitiesSection() {
             behavior: "smooth",
         });
 
-        if (activeIndex !== serviceImages.length) {
+        if (activeIndex !== amenityImages.length) {
             return;
         }
 
@@ -67,7 +67,7 @@ export default function AmenitiesSection() {
                         <div key={`${image.id}-${index}`} className="relative aspect-[0.78] w-full shrink-0 snap-start overflow-hidden rounded-sm sm:w-[calc((100%-1rem)/2)] lg:w-[calc((100%-2rem)/3)]">
                                 <Image
                                     src={image.src}
-                                    alt={`Casa Solaz service ${image.id}`}
+                                    alt={`Casa Solaz amenity ${image.id}`}
                                     fill
                                     sizes="(min-width: 1024px) 33vw, 80vw"
                                     className="border rounded-sm border-[#3C4032] object-cover"

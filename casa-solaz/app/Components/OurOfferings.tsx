@@ -10,7 +10,7 @@ const serviceImages = Array.from({ length: 8 }, (_, index) => ({
 
 const carouselImages = [...serviceImages, ...serviceImages.slice(0, 4)];
 
-export default function OurServicesSection() {
+export default function OurOfferingSection() {
     const [activeIndex, setActiveIndex] = useState(0);
     const carouselRef = useRef<HTMLDivElement>(null);
     const skipNextScroll = useRef(false);
@@ -61,7 +61,7 @@ export default function OurServicesSection() {
     return (    
         <main className="w-full bg-[#E5E5E5] px-6 py-16 text-[#3C4032] sm:px-10 lg:px-16">
             <section className="mx-auto w-full container">
-                <p className="text-xl uppercase tracking-[0.16em] text-[#3A4235]/90">Our Services</p>
+                <p className="text-xl uppercase tracking-[0.16em] text-[#3A4235]/90">What we Offer</p>
                 <div ref={carouselRef} className="mt-4 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-4 scrollbar-none rounded-sm">
                     {carouselImages.map((image, index) => (
                         <div key={`${image.id}-${index}`} className="relative aspect-[0.78] w-full shrink-0 snap-start overflow-hidden rounded-sm sm:w-[calc((100%-1rem)/2)] lg:w-[calc((100%-2rem)/3)]">

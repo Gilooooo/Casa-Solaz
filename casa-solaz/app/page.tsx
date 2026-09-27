@@ -4,7 +4,7 @@ import FooterSection from "./Components/FooterSection";
 import HeroSection from "./Components/HeroSection";
 import NavBar from "./Components/NavBar";
 import OfferSection from "./Components/OfferSection";
-import OurServicesSection from "./Components/OurServices";
+import OurOfferingSection from "./Components/OurOfferings";
 import TestimonialSection from "./Components/TestimonialSection";
 
 export default function Home() {
@@ -13,7 +13,7 @@ export default function Home() {
       <NavBar/>
       <HeroSection/>
       <AboutUsSection/>
-      <OurServicesSection/>
+      <OurOfferingSection/>
       <AmenitiesSection/>
       <OfferSection/>
       <TestimonialSection/>
