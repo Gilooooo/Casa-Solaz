@@ -35,14 +35,32 @@ const carouselTestimonials = [...testimonials, ...testimonials];
 
 export default function TestimonialSection() {
     const [activeIndex, setActiveIndex] = useState(0);
+    const [isInView, setIsInView] = useState(false);
+    const sectionRef = useRef<HTMLElement>(null);
     const carouselRef = useRef<HTMLDivElement>(null);
     const skipNextScroll = useRef(false);
+
+    useEffect(() => {
+        const section = sectionRef.current;
+
+        if (!section) {
+            return;
+        }
+
+        const observer = new IntersectionObserver(([entry]) => {
+            setIsInView(entry.isIntersecting);
+        });
+
+        observer.observe(section);
+
+        return () => observer.disconnect();
+    }, []);
 
     useEffect(() => {
         const carousel = carouselRef.current;
         const activeCard = carousel?.children[activeIndex] as HTMLElement | undefined;
 
-        if (!carousel || !activeCard) {
+        if (!isInView || !carousel || !activeCard) {
             return;
         }
 
@@ -71,25 +89,29 @@ export default function TestimonialSection() {
         }, 1000);
 
         return () => window.clearTimeout(resetLoop);
-    }, [activeIndex]);
+    }, [activeIndex, isInView]);
 
     useEffect(() => {
+        if (!isInView) {
+            return;
+        }
+
         const interval = window.setInterval(() => {
             setActiveIndex((index) => index + 1);
         }, 3000);
 
         return () => window.clearInterval(interval);
-    }, []);
+    }, [isInView]);
 
     return (
         <main className="flex min-h-[90vh] w-full items-center bg-[#E5E5E5] px-6 py-16 text-[#3C4032] sm:px-10 lg:px-16">
-            <section className="mx-auto flex w-full container flex-col">
+            <section ref={sectionRef} className="mx-auto flex w-full container flex-col">
                 <p className="text-xl uppercase tracking-[0.16em] text-[#3A4235]/90">Testimonials</p>
                 <div ref={carouselRef} className="mt-8 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-4 scrollbar-none sm:mt-10">
                     {carouselTestimonials.map((testimonial, index) => (
                         <article
                             key={`${testimonial.category}-${index}`}
-                            className="relative flex h-76 w-full shrink-0 snap-start flex-col items-center rounded-lg bg-[#EADBD8] px-7 py-6 text-center sm:w-[calc((100%-1rem)/2)] lg:w-[calc((100%-2rem)/3)]"
+                            className="relative flex h-[clamp(18rem,38vw,19rem)] w-full max-h-76 shrink-0 snap-start flex-col items-center rounded-lg bg-[#EADBD8] px-7 py-6 text-center sm:w-[calc((100%-1rem)/2)] lg:w-[calc((100%-2rem)/3)]"
                         >
                             <div className="flex gap-1 text-[#E8BD22]" aria-label="5 out of 5 stars">
                                 {Array.from({ length: 5 }, (_, starIndex) => (

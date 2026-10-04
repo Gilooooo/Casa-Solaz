@@ -1,5 +1,6 @@
 import AboutUsSection from "./Components/AboutUsSection";
 import AmenitiesSection from "./Components/AmenitiesSection";
+import AmenitiesSection2nd from "./Components/AmenitiesSection2nd";
 import FooterSection from "./Components/FooterSection";
 import HeroSection from "./Components/HeroSection";
 import NavBar from "./Components/NavBar";
@@ -14,6 +15,7 @@ export default function Home() {
       <HeroSection/>
       <AboutUsSection/>
       <OurOfferingSection/>
+      <AmenitiesSection2nd/>
       <AmenitiesSection/>
       <OfferSection/>
       <TestimonialSection/>
