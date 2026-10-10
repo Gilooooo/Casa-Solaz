@@ -20,6 +20,7 @@ export default function OfferSection() {
     const [checkIn, setCheckIn] = useState<Date | null>(null);
     const [checkOut, setCheckOut] = useState<Date | null>(null);
     const [activeField, setActiveField] = useState<DateField | null>(null);
+    const [offerModal, setOfferModal] = useState(false);
     const [visibleMonth, setVisibleMonth] = useState(monthStart(today));
 
     const nights = checkIn && checkOut ? Math.round((+checkOut - +checkIn) / 86400000) : 0;
@@ -82,13 +83,94 @@ export default function OfferSection() {
                         <p className="mt-1 text-md">{nights} {nights === 1 ? "Night" : "Nights"} &bull; &#8369;{NIGHTLY_RATE}.00 / night</p>
                     </div>
                     <div className="mt-4 flex items-center justify-between gap-6 sm:mt-0 sm:items-end">
-                        <button type="button" disabled={!nights} className="flex items-center gap-2 rounded-lg bg-[#3A4235] px-6 py-3 text-sm text-[#F8F6F3] transition hover:bg-[#53604B] disabled:cursor-not-allowed disabled:opacity-50">
+                        <button type="button" onClick={() => setOfferModal(true)} disabled={!nights} className="flex items-center gap-2 rounded-lg bg-[#3A4235] px-6 py-3 text-sm text-[#F8F6F3] transition hover:bg-[#53604B] disabled:cursor-not-allowed disabled:opacity-50">
                             Reserve Now
                             <Icon icon="material-symbols:arrow-forward-rounded" className="h-5 w-5" aria-hidden="true" />
                         </button>
                         <p className="text-lg font-medium">&#8369;{estimatedTotal.toFixed(2)}</p>
                     </div>
                 </div>
+
+                {offerModal && (
+                    <div
+                        className="fixed inset-0 z-40 flex items-center justify-center bg-[#1D211B]/45 p-4 backdrop-blur-sm"
+                        onClick={() => setOfferModal(false)}
+                        role="presentation"
+                    >
+                        <div
+                            className="max-h-[calc(100vh-2rem)] w-full max-w-2xl overflow-y-auto rounded-xl border border-[#E5E0DC] bg-[#F8F6F3] p-5 shadow-[0_18px_40px_rgba(0,0,0,0.3)] sm:p-7"
+                            onClick={(event) => event.stopPropagation()}
+                            role="dialog"
+                            aria-modal="true"
+                            aria-labelledby="reservation-title"
+                        >
+                            <div className="flex items-start justify-between gap-4">
+                                <div>
+                                    <p id="reservation-title" className="text-xl font-medium sm:text-2xl">Reserve Your Stay</p>
+                                    <p className="mt-1 text-sm text-gray">Tell us how to reach you and we will confirm your reservation.</p>
+                                </div>
+                                <button type="button" onClick={() => setOfferModal(false)} className="rounded-full border border-[#E5E0DC] p-2.5" aria-label="Close reservation form">
+                                    <Icon icon="material-symbols:close" className="h-5 w-5" aria-hidden="true" />
+                                </button>
+                            </div>
+
+                            <form className="mt-6 space-y-4" onSubmit={(event) => event.preventDefault()}>
+                                <div className="grid gap-4 sm:grid-cols-2">
+                                    <label className="text-sm">
+                                        <span className="mb-1.5 block">Full Name</span>
+                                        <input type="text" name="fullName" required className="h-12 w-full rounded-lg border border-[#E5E0DC] bg-[#F3F1EE] px-4 outline-none transition focus:border-[#3A4235] focus:ring-2 focus:ring-[#3A4235]/20" />
+                                    </label>
+                                    <label className="text-sm">
+                                        <span className="mb-1.5 block">Contact Number</span>
+                                        <input type="tel" name="contactNumber" required className="h-12 w-full rounded-lg border border-[#E5E0DC] bg-[#F3F1EE] px-4 outline-none transition focus:border-[#3A4235] focus:ring-2 focus:ring-[#3A4235]/20" />
+                                    </label>
+                                </div>
+
+                                <label className="block text-sm">
+                                    <span className="mb-1.5 block">Email Address</span>
+                                    <input type="email" name="email" required className="h-12 w-full rounded-lg border border-[#E5E0DC] bg-[#F3F1EE] px-4 outline-none transition focus:border-[#3A4235] focus:ring-2 focus:ring-[#3A4235]/20" />
+                                </label>
+
+                                <div>
+                                    <p className="mb-1.5 text-sm">Stay Dates</p>
+                                    <div className="mt-4 grid gap-2 sm:grid-cols-2">
+                                        {FIELDS.map(([field, label]) => (
+                                            <button
+                                                key={field}
+                                                type="button"
+                                                onClick={() => openPicker(field)}
+                                                className={`flex h-14 items-center gap-3 rounded-lg border bg-[#F3F1EE] px-4 text-left transition-colors hover:border-[#3A4235] focus:outline-none focus:ring-2 focus:ring-[#3A4235]/40 ${activeField === field ? "border-[#3A4235]" : "border-[#E5E0DC]"}`}
+                                            >
+                                                <Icon icon="material-symbols:calendar-month-outline" className="h-5 w-5 shrink-0 text-[#3A4235]" aria-hidden="true" />
+                                                <span className="flex flex-col leading-none">
+                                                    <span className="text-xs text-gray">{label}</span>
+                                                    <span className="mt-1.5 text-sm">{formatDate(field === "checkIn" ? checkIn : checkOut)}</span>
+                                                </span>
+                                            </button>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <label className="block text-sm">
+                                    <span className="mb-1.5 block">Estimated Price</span>
+                                    <input type="text" name="estimatedPrice" value={`₱${estimatedTotal.toFixed(2)}`} readOnly className="h-12 w-full rounded-lg border border-[#E5E0DC] bg-[#EDEAE6] px-4 outline-none" />
+                                </label>
+
+                                <label className="block text-sm">
+                                    <span className="mb-1.5 block">Message</span>
+                                    <textarea name="message" rows={4} className="w-full resize-y rounded-lg border border-[#E5E0DC] bg-[#F3F1EE] px-4 py-3 outline-none transition focus:border-[#3A4235] focus:ring-2 focus:ring-[#3A4235]/20" />
+                                </label>
+
+                                <div className="flex justify-end border-t border-[#E5E0DC] pt-4">
+                                    <button type="submit" className="flex items-center gap-2 rounded-lg bg-[#3A4235] px-6 py-3 text-sm text-[#F8F6F3] transition hover:bg-[#53604B]">
+                                        Submit Reservation
+                                        <Icon icon="material-symbols:arrow-forward-rounded" className="h-5 w-5" aria-hidden="true" />
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                )}
 
                 {activeField && (
                     <div
