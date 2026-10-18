@@ -73,16 +73,16 @@ export default function NavBar({ darkText = false }: { darkText?: boolean }) {
                 }`}
             >
                 <li className="transition-colors duration-300 ease-in-out hover:text-[#E8D8D8]">
-                    <a href="">Home</a>
+                    <Link href="/">Home</Link>
                 </li>
                 <li className="transition-colors duration-300 ease-in-out hover:text-[#E8D8D8]">
-                    <a href="/about">About Us</a>
+                    <Link href="/AboutUs">About Us</Link>
                 </li>
                 <li className="transition-colors duration-300 ease-in-out hover:text-[#E8D8D8]">
-                    <a href="/FAQs">FAQs</a>
+                    <Link href="/FAQs">FAQs</Link>
                 </li>
                 <li className="transition-colors duration-300 ease-in-out hover:text-[#E8D8D8]">
-                    <a href="/contact">Contact Us</a>
+                    <Link href="/ContactUs">Contact Us</Link>
                 </li>
             </ul>
         </nav>
