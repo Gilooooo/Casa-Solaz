@@ -2,6 +2,8 @@
 
 import { Icon } from "@iconify/react";
 import { useState } from "react";
+import { createPortal } from "react-dom";
+import ScrollReveal from "./ScrollReveal";
 
 type DateField = "checkIn" | "checkOut";
 
@@ -55,6 +57,7 @@ export default function OfferSection() {
 
     return (
         <main className="flex min-h-[60vh] w-full items-center bg-[#E8D8D8] px-6 py-16 text-[#3C4032] sm:px-10 lg:px-16">
+            <ScrollReveal className="w-full">
             <section className="container mx-auto flex min-h-[30vh] w-full flex-col justify-center rounded-xl bg-[#F8F6F3] px-4 py-5 shadow-[0_14px_35px_rgba(0,0,0,0.16)] sm:px-7 sm:py-6">
                 <h2 className="text-xl font-medium sm:text-2xl">Select Accommodation Dates</h2>
                 <div className="mt-4 grid gap-2 sm:grid-cols-2">
@@ -91,14 +94,14 @@ export default function OfferSection() {
                     </div>
                 </div>
 
-                {offerModal && (
+                {offerModal && !activeField && typeof document !== "undefined" && createPortal((
                     <div
                         className="fixed inset-0 z-40 flex items-center justify-center bg-[#1D211B]/45 p-4 backdrop-blur-sm"
                         onClick={() => setOfferModal(false)}
                         role="presentation"
                     >
                         <div
-                            className="max-h-[calc(100vh-2rem)] w-full max-w-2xl overflow-y-auto rounded-xl border border-[#E5E0DC] bg-[#F8F6F3] p-5 shadow-[0_18px_40px_rgba(0,0,0,0.3)] sm:p-7"
+                            className="max-h-[calc(100dvh-1rem)] w-full max-w-2xl overflow-y-auto rounded-xl border border-[#E5E0DC] bg-[#F8F6F3] p-4 text-[#3C4032] shadow-[0_18px_40px_rgba(0,0,0,0.3)] sm:max-h-[calc(100vh-2rem)] sm:p-7"
                             onClick={(event) => event.stopPropagation()}
                             role="dialog"
                             aria-modal="true"
@@ -106,40 +109,40 @@ export default function OfferSection() {
                         >
                             <div className="flex items-start justify-between gap-4">
                                 <div>
-                                    <p id="reservation-title" className="text-xl font-medium sm:text-2xl">Reserve Your Stay</p>
-                                    <p className="mt-1 text-sm text-gray">Tell us how to reach you and we will confirm your reservation.</p>
+                                    <p id="reservation-title" className="text-lg font-medium sm:text-2xl">Reserve Your Stay</p>
+                                    <p className="mt-1 text-xs text-gray sm:text-sm">Tell us how to reach you and we will confirm your reservation.</p>
                                 </div>
-                                <button type="button" onClick={() => setOfferModal(false)} className="rounded-full border border-[#E5E0DC] p-2.5" aria-label="Close reservation form">
+                                <button type="button" onClick={() => setOfferModal(false)} className="rounded-full border border-[#E5E0DC] p-2 sm:p-2.5" aria-label="Close reservation form">
                                     <Icon icon="material-symbols:close" className="h-5 w-5" aria-hidden="true" />
                                 </button>
                             </div>
 
-                            <form className="mt-6 space-y-4" onSubmit={(event) => event.preventDefault()}>
-                                <div className="grid gap-4 sm:grid-cols-2">
+                            <form className="mt-4 space-y-3 sm:mt-6 sm:space-y-4" onSubmit={(event) => event.preventDefault()}>
+                                <div className="grid gap-3 sm:gap-4 sm:grid-cols-2">
                                     <label className="text-sm">
                                         <span className="mb-1.5 block">Full Name</span>
-                                        <input type="text" name="fullName" required className="h-12 w-full rounded-lg border border-[#E5E0DC] bg-[#F3F1EE] px-4 outline-none transition focus:border-[#3A4235] focus:ring-2 focus:ring-[#3A4235]/20" />
+                                        <input type="text" name="fullName" required className="h-11 w-full rounded-lg border border-[#E5E0DC] bg-[#F3F1EE] px-4 outline-none transition focus:border-[#3A4235] focus:ring-2 focus:ring-[#3A4235]/20 sm:h-12" />
                                     </label>
                                     <label className="text-sm">
                                         <span className="mb-1.5 block">Contact Number</span>
-                                        <input type="tel" name="contactNumber" required className="h-12 w-full rounded-lg border border-[#E5E0DC] bg-[#F3F1EE] px-4 outline-none transition focus:border-[#3A4235] focus:ring-2 focus:ring-[#3A4235]/20" />
+                                        <input type="tel" name="contactNumber" required className="h-11 w-full rounded-lg border border-[#E5E0DC] bg-[#F3F1EE] px-4 outline-none transition focus:border-[#3A4235] focus:ring-2 focus:ring-[#3A4235]/20 sm:h-12" />
                                     </label>
                                 </div>
 
                                 <label className="block text-sm">
                                     <span className="mb-1.5 block">Email Address</span>
-                                    <input type="email" name="email" required className="h-12 w-full rounded-lg border border-[#E5E0DC] bg-[#F3F1EE] px-4 outline-none transition focus:border-[#3A4235] focus:ring-2 focus:ring-[#3A4235]/20" />
+                                    <input type="email" name="email" required className="h-11 w-full rounded-lg border border-[#E5E0DC] bg-[#F3F1EE] px-4 outline-none transition focus:border-[#3A4235] focus:ring-2 focus:ring-[#3A4235]/20 sm:h-12" />
                                 </label>
 
                                 <div>
                                     <p className="mb-1.5 text-sm">Stay Dates</p>
-                                    <div className="mt-4 grid gap-2 sm:grid-cols-2">
+                                    <div className="mt-3 grid gap-2 sm:mt-4 sm:grid-cols-2">
                                         {FIELDS.map(([field, label]) => (
                                             <button
                                                 key={field}
                                                 type="button"
                                                 onClick={() => openPicker(field)}
-                                                className={`flex h-14 items-center gap-3 rounded-lg border bg-[#F3F1EE] px-4 text-left transition-colors hover:border-[#3A4235] focus:outline-none focus:ring-2 focus:ring-[#3A4235]/40 ${activeField === field ? "border-[#3A4235]" : "border-[#E5E0DC]"}`}
+                                                className={`flex h-12 items-center gap-3 rounded-lg border bg-[#F3F1EE] px-4 text-left transition-colors hover:border-[#3A4235] focus:outline-none focus:ring-2 focus:ring-[#3A4235]/40 sm:h-14 ${activeField === field ? "border-[#3A4235]" : "border-[#E5E0DC]"}`}
                                             >
                                                 <Icon icon="material-symbols:calendar-month-outline" className="h-5 w-5 shrink-0 text-[#3A4235]" aria-hidden="true" />
                                                 <span className="flex flex-col leading-none">
@@ -153,12 +156,12 @@ export default function OfferSection() {
 
                                 <label className="block text-sm">
                                     <span className="mb-1.5 block">Estimated Price</span>
-                                    <input type="text" name="estimatedPrice" value={`₱${estimatedTotal.toFixed(2)}`} readOnly className="h-12 w-full rounded-lg border border-[#E5E0DC] bg-[#EDEAE6] px-4 outline-none" />
+                                    <input type="text" name="estimatedPrice" value={`₱${estimatedTotal.toFixed(2)}`} readOnly className="h-11 w-full rounded-lg border border-[#E5E0DC] bg-[#EDEAE6] px-4 outline-none sm:h-12" />
                                 </label>
 
                                 <label className="block text-sm">
                                     <span className="mb-1.5 block">Message</span>
-                                    <textarea name="message" rows={4} className="w-full resize-y rounded-lg border border-[#E5E0DC] bg-[#F3F1EE] px-4 py-3 outline-none transition focus:border-[#3A4235] focus:ring-2 focus:ring-[#3A4235]/20" />
+                                    <textarea name="message" rows={4} className="h-24 w-full resize-y rounded-lg border border-[#E5E0DC] bg-[#F3F1EE] px-4 py-3 outline-none transition focus:border-[#3A4235] focus:ring-2 focus:ring-[#3A4235]/20 sm:h-auto" />
                                 </label>
 
                                 <div className="flex justify-end border-t border-[#E5E0DC] pt-4">
@@ -170,16 +173,16 @@ export default function OfferSection() {
                             </form>
                         </div>
                     </div>
-                )}
+                ), document.body)}
 
-                {activeField && (
+                {activeField && typeof document !== "undefined" && createPortal((
                     <div
                         className="fixed inset-0 z-50 flex items-center justify-center bg-[#1D211B]/45 p-4 backdrop-blur-sm"
                         onClick={() => setActiveField(null)}
                         role="presentation"
                     >
                         <div
-                            className="flex max-h-[calc(100vh-2rem)] w-full max-w-120 flex-col overflow-y-auto rounded-xl border border-[#E5E0DC] bg-[#F8F6F3] p-5 shadow-[0_18px_40px_rgba(0,0,0,0.3)] sm:p-6"
+                            className="flex max-h-[calc(100vh-2rem)] w-full max-w-120 flex-col overflow-y-auto rounded-xl border border-[#E5E0DC] bg-[#F8F6F3] p-5 text-[#3C4032] shadow-[0_18px_40px_rgba(0,0,0,0.3)] sm:p-6"
                             onClick={(event) => event.stopPropagation()}
                             role="dialog"
                             aria-modal="true"
@@ -229,8 +232,9 @@ export default function OfferSection() {
                             </div>
                         </div>
                     </div>
-                )}
+                ), document.body)}
             </section>
+            </ScrollReveal>
         </main>
     );
 }

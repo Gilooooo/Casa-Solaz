@@ -2,6 +2,7 @@
 
 import { Icon } from "@iconify/react";
 import { useEffect, useRef, useState } from "react";
+import ScrollReveal from "./ScrollReveal";
 
 const testimonials = [
     {
@@ -105,8 +106,9 @@ export default function TestimonialSection() {
 
     return (
         <main className="flex min-h-[90vh] w-full items-center bg-[#E5E5E5] px-6 py-16 text-[#3C4032] sm:px-10 lg:px-16">
+            <ScrollReveal className="w-full">
             <section ref={sectionRef} className="mx-auto flex w-full container flex-col">
-                <p className="text-xl uppercase tracking-[0.16em] text-[#3A4235]/90">Testimonials</p>
+                <p className="text-xl uppercase tracking-[0.16em] text-[#3A4235]/90 font-semibold">Testimonials</p>
                 <div ref={carouselRef} className="mt-8 flex snap-x snap-mandatory gap-4 overflow-x-auto pb-4 scrollbar-none sm:mt-10">
                     {carouselTestimonials.map((testimonial, index) => (
                         <article
@@ -125,6 +127,7 @@ export default function TestimonialSection() {
                     ))}
                 </div>
             </section>
+            </ScrollReveal>
         </main>
     );
 }

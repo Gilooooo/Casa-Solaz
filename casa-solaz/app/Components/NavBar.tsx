@@ -2,9 +2,10 @@
 
 import Logo from "@/app/Components/Logo";
 import { Icon } from "@iconify/react";
+import Link from "next/dist/client/link";
 import { useEffect, useState } from "react";
 
-export default function NavBar() {
+export default function NavBar({ darkText = false }: { darkText?: boolean }) {
     const [isScrolled, setIsScrolled] = useState(false);
     const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -30,7 +31,7 @@ export default function NavBar() {
 
             <main
                 className={`container relative z-10 flex w-full items-center justify-between sm:px-0 px-5 transition-colors duration-200 ${
-                    isScrolled ? "text-[#3A4235]" : "text-[#E8D8D8]"
+                    isScrolled || darkText ? "text-[#3A4235]" : "text-[#E8D8D8]"
                 }`}
             >
                 <div>
@@ -51,16 +52,16 @@ export default function NavBar() {
                 </button>
                 <ul className="hidden md:flex md:items-center md:gap-8">
                     <li className="transition-colors duration-300 ease-in-out hover:text-[#E8D8D8]">
-                        <a href="">Home</a>
+                        <Link href="/">Home</Link>
                     </li>
                     <li className="transition-colors duration-300 ease-in-out hover:text-[#E8D8D8]">
-                        <a href="/about">About Us</a>
+                        <Link href="/AboutUs">About Us</Link>
                     </li>
                     <li className="transition-colors duration-300 ease-in-out hover:text-[#E8D8D8]">
-                        <a href="/FAQs">FAQs</a>
+                        <Link href="/FAQs">FAQs</Link>
                     </li>
                     <li className="transition-colors duration-300 ease-in-out hover:text-[#E8D8D8]">
-                        <a href="/contact">Contact Us</a>
+                        <Link href="/ContactUs">Contact Us</Link>
                     </li>
                 </ul>
             </main>

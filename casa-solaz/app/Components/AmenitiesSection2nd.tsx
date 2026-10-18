@@ -1,4 +1,5 @@
 import { Icon } from "@iconify/react";
+import ScrollReveal from "./ScrollReveal";
 
 const amenities = [
     {
@@ -32,7 +33,7 @@ const amenities = [
         className: "lg:col-span-4",
     },
     {
-        name: "Fresh Linens",
+        name: "Soft Bed",
         description: "Soft bedding and crisp towels are refreshed regularly for a restful, hotel-like feel.",
         icon: "material-symbols:bed",
         className: "lg:col-span-4",
@@ -48,8 +49,9 @@ const amenities = [
 export default function AmenitiesSection2nd() {
     return (
         <main className="min-h-[70vh] w-full bg-[#E5E5E5] px-6 py-16 text-[#3C4032] sm:px-10 lg:px-16">
+            <ScrollReveal className="w-full">
             <section className="mx-auto flex min-h-[calc(70vh-8rem)] w-full container flex-col">
-                <h2 className="text-4xl leading-none sm:text-5xl">Comfort Awaits You</h2>
+                <h2 className="text-4xl leading-none sm:text-5xl font-semibold">Comfort Awaits You</h2>
                 <p className="mt-2 max-w-2xl text-sm text-[#3C4032]/75 sm:text-base">
                     Every detail of your stay is designed for comfort, so you can relax, recharge, and feel right at home.
                 </p>
@@ -69,6 +71,7 @@ export default function AmenitiesSection2nd() {
                     ))}
                 </div>
             </section>
+            </ScrollReveal>
         </main>
     );
 }
