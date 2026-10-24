@@ -18,8 +18,8 @@ export default function FooterSection() {
                             className="h-auto w-full max-w-100"
                         />
                     </div>
-                    <div className="flex w-full flex-col items-center justify-start gap-5 sm:gap-8 md:w-1/2 lg:w-3/4 lg:flex-row lg:items-start lg:gap-6 xl:w-2/3 xl:gap-20">
-                        <div className="w-full p-0 sm:p-6 lg:p-3 lg:pt-0 sm:pt-0">
+                    <div className="flex w-full flex-col items-center justify-start gap-7 sm:gap-8 md:w-1/2 lg:w-3/4 lg:flex-row lg:items-start lg:gap-6 xl:w-2/3 xl:gap-20">
+                        <div className="w-full p-2 sm:p-6 lg:p-3 lg:pt-0 sm:pt-0">
                             <h2 className="mb-3 text-xl italic text-center xl:text-2xl">Quick Links</h2>
                             <nav className="grid grid-cols-2 gap-x-6 gap-y-2 text-base lg:text-start text-center xl:gap-y-10 xl:gap-x-10 xl:text-lg">
                                 <Link href="/AboutUs">About Us</Link>
@@ -29,15 +29,15 @@ export default function FooterSection() {
                                 <Link href="/Gallery">Gallery</Link>
                             </nav>
                         </div>
-                        <div className="w-full p-0 sm:p-6 lg:p-3 lg:pt-0 sm:pt-0">
+                        <div className="w-full p-2 sm:p-6 lg:p-3 lg:pt-0 sm:pt-0">
                             <h2 className="mb-3 text-xl italic text-center xl:text-2xl">Our Information</h2>
                             <div className="flex flex-col items-center gap-7 text-center text-base lg:items-start lg:text-start xl:text-lg">
-                                <a href="mailto:inquiries@casasolaztagaytay.com" className="flex items-center justify-center gap-2 lg:justify-start">
+                                <a href="mailto:inquiries@casasolaztagaytay.com" className="flex min-w-0 max-w-full items-center justify-center gap-2 break-all lg:justify-start">
                                     <Icon icon="carbon:email" />inquiries@casasolaztagaytay.com
                                 </a>
                                 <a href="tel:+639175963432" className="flex items-center justify-center gap-2 lg:justify-start">
                                     <Icon icon="carbon:phone" />+63 917 596 3432</a>
-                                <address className="flex items-center justify-center gap-2 not-italic lg:justify-start">
+                                <address className="flex min-w-0 max-w-full items-center justify-center gap-2 wrap-break-words not-italic lg:justify-start">
                                     <Icon icon="carbon:location" />
                                     SMDC Wind Residences, Tagaytay City, Cavite</address>
                             </div>
@@ -45,7 +45,7 @@ export default function FooterSection() {
                     </div>
                 </div>
 
-                <div className="flex items-center justify-center gap-5 py-2 px-0 sm:p-2 text-lg sm:mt-0 mt-3">
+                <div className="flex items-center justify-center gap-5 py-2 px-0 sm:p-2 text-lg sm:mt-0 mt-5">
                     <p>&copy; 2026 All rights reserved</p>
                     <div className="flex items-center gap-3" aria-label="Social media links">
                         <Link href="https://www.facebook.com/casasolazph" aria-label="Facebook">
