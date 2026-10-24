@@ -107,7 +107,7 @@ export default function OurOfferingSection() {
         <main className="w-full bg-[#E5E5E5] px-6 py-16 text-[#3C4032] sm:px-10 lg:px-16">
             <ScrollReveal className="w-full">
             <section ref={sectionRef} className="mx-auto w-full container">
-                <p className="text-xl uppercase tracking-[0.16em] text-[#3A4235]/90 font-semibold">What we Offer</p>
+                <p className="text-xl uppercase tracking-widest text-[#3A4235]/90 font-bold">What we Offer</p>
                 <div
                     ref={carouselRef}
                     onPointerDown={pauseAutoplay}

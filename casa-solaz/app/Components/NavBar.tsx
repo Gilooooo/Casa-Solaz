@@ -21,7 +21,7 @@ export default function NavBar({ darkText = false }: { darkText?: boolean }) {
     const glass = "bg-[#E8D8D8]/80 backdrop-blur-lg";
 
     return (
-        <nav className="fixed z-10 flex h-[10vh] w-full justify-center font-cormorant">
+        <nav className="fixed z-50 flex h-[10vh] w-full justify-center font-cormorant">
             <div
                 className={`absolute inset-0 h-[10vh] transition-[background-color,backdrop-filter] duration-200 ease-in ${
                     isScrolled ? glass : ""
@@ -30,7 +30,8 @@ export default function NavBar({ darkText = false }: { darkText?: boolean }) {
             />
 
             <main
-                className={`container relative z-10 flex w-full items-center justify-between sm:px-0 px-5 transition-colors duration-200 ${
+                    style={{ paddingInline: "clamp(1.25rem, 5vw, 3rem)" }}
+                    className={`container relative z-10 flex w-full items-center justify-between transition-colors duration-200 ${
                     isScrolled || darkText ? "text-[#3A4235]" : "text-[#E8D8D8]"
                 }`}
             >
@@ -52,16 +53,16 @@ export default function NavBar({ darkText = false }: { darkText?: boolean }) {
                 </button>
                 <ul className="hidden md:flex md:items-center md:gap-8">
                     <li className="transition-colors duration-300 ease-in-out hover:text-[#E8D8D8]">
-                        <Link href="/">Home</Link>
+                        <Link href="/">HOME</Link>
                     </li>
                     <li className="transition-colors duration-300 ease-in-out hover:text-[#E8D8D8]">
-                        <Link href="/AboutUs">About Us</Link>
+                        <Link href="/AboutUs">ABOUT US</Link>
                     </li>
                     <li className="transition-colors duration-300 ease-in-out hover:text-[#E8D8D8]">
                         <Link href="/FAQs">FAQs</Link>
                     </li>
                     <li className="transition-colors duration-300 ease-in-out hover:text-[#E8D8D8]">
-                        <Link href="/ContactUs">Contact Us</Link>
+                        <Link href="/ContactUs">CONTACT US</Link>
                     </li>
                 </ul>
             </main>
@@ -73,16 +74,16 @@ export default function NavBar({ darkText = false }: { darkText?: boolean }) {
                 }`}
             >
                 <li className="transition-colors duration-300 ease-in-out hover:text-[#E8D8D8]">
-                    <Link href="/">Home</Link>
+                    <Link href="/">HOME</Link>
                 </li>
                 <li className="transition-colors duration-300 ease-in-out hover:text-[#E8D8D8]">
-                    <Link href="/AboutUs">About Us</Link>
+                    <Link href="/AboutUs">ABOUT US</Link>
                 </li>
                 <li className="transition-colors duration-300 ease-in-out hover:text-[#E8D8D8]">
                     <Link href="/FAQs">FAQs</Link>
                 </li>
                 <li className="transition-colors duration-300 ease-in-out hover:text-[#E8D8D8]">
-                    <Link href="/ContactUs">Contact Us</Link>
+                    <Link href="/ContactUs">CONTACT US</Link>
                 </li>
             </ul>
         </nav>

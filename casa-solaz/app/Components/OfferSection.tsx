@@ -56,7 +56,7 @@ export default function OfferSection() {
     }
 
     return (
-        <main className="flex min-h-[60vh] w-full items-center bg-[#E8D8D8] px-6 py-16 text-[#3C4032] sm:px-10 lg:px-16">
+        <main id="accommodation" className="flex min-h-[60vh] w-full items-center bg-[#E8D8D8] px-6 py-16 text-[#3C4032] sm:px-10 lg:px-16">
             <ScrollReveal className="w-full">
             <section className="container mx-auto flex min-h-[30vh] w-full flex-col justify-center rounded-xl bg-[#F8F6F3] px-4 py-5 shadow-[0_14px_35px_rgba(0,0,0,0.16)] sm:px-7 sm:py-6">
                 <h2 className="text-xl font-medium sm:text-2xl">Select Accommodation Dates</h2>

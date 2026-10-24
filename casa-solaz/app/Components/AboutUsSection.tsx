@@ -9,10 +9,10 @@ const cormorant = Cormorant_Garamond({
 
 export default function AboutUsSection() {
     return (
-        <main className="flex min-h-[90vh] w-full justify-center items-center bg-[#E5E5E5] px-6 py-16 text-[#3C4032] sm:px-10 lg:px-16">
+        <main className="flex min-h-screen w-full justify-center items-center bg-[#E5E5E5] px-6 pb-16 pt-34 text-[#3C4032] sm:px-10 lg:px-16">
             <ScrollReveal className="w-full container">
                 <section className="flex w-full container flex-col">
-                    <p className="text-xl uppercase tracking-[0.16em] text-[#3A4235]/90 font-semibold">About Us</p>
+                    <p className="text-xl uppercase tracking-widest text-[#3A4235]/90 font-bold">About Us</p>
                     <div className="mt-8 flex flex-col gap-12 md:mt-9 md:flex-row md:justify-evenly md:items-center md:gap-16 lg:gap-24">
                         <div className="w-full max-w-md md:flex-1">
                             <h1 className={` ${cormorant.className} text-6xl font-semibold leading-none sm:text-7xl`}>Casa <span className="italic">Sol</span>az</h1>
