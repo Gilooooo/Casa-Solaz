@@ -4,19 +4,19 @@ import Image from "next/image";
 import { Icon } from "@iconify/react";
 import { createPortal } from "react-dom";
 import { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 import ScrollReveal from "./ScrollReveal";
+import { getDateKey, getPhilippineReservationTimestamp, getPhilippineToday } from "@/lib/philippineDate";
+import { calculateStayPricing, type PriceRecord } from "@/lib/pricing";
 
 type DateField = "checkIn" | "checkOut";
 
-const NIGHTLY_RATE = 1999;
 const FIELDS = [["checkIn", "Check-in"], ["checkOut", "Check-out"]] as const;
-const today = new Date();
-today.setHours(0, 0, 0, 0);
+const today = getPhilippineToday();
 const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const dateFormat = new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric" });
 const monthStart = (date: Date) => new Date(date.getFullYear(), date.getMonth(), 1);
 const formatDate = (date: Date | null) => (date ? dateFormat.format(date) : "-");
-const reserved = new Set([new Date(2026, 9, 12).getTime(), new Date(2026, 9, 13).getTime()]);
 
 export default function HeroSection() {
 	const [isSticky, setIsSticky] = useState(false);
@@ -24,6 +24,10 @@ export default function HeroSection() {
 	const [checkOut, setCheckOut] = useState<Date | null>(null);
 	const [activeField, setActiveField] = useState<DateField | null>(null);
 	const [reservationModal, setReservationModal] = useState(false);
+	const [isSubmitting, setIsSubmitting] = useState(false);
+	const [pax, setPax] = useState("1");
+	const [prices, setPrices] = useState<PriceRecord[]>([]);
+	const [reservedDates, setReservedDates] = useState<Set<string>>(new Set());
 	const [visibleMonth, setVisibleMonth] = useState(monthStart(today));
 	const heroRef = useRef<HTMLElement>(null);
 	const bookingRef = useRef<HTMLDivElement>(null);
@@ -51,8 +55,34 @@ export default function HeroSection() {
 		};
 	}, []);
 
-	const nights = checkIn && checkOut ? Math.round((+checkOut - +checkIn) / 86400000) : 0;
-	const estimatedTotal = nights * NIGHTLY_RATE;
+	useEffect(() => {
+		fetch("/api/reservation")
+			.then(async (response) => {
+				if (!response.ok) throw new Error("Could not load reserved dates");
+				return response.json();
+			})
+			.then((data: { reservedDates?: string[] }) => setReservedDates(new Set(data.reservedDates ?? [])))
+			.catch(() => toast.error("We could not load availability. Please try again."));
+	}, []);
+
+	useEffect(() => {
+		fetch("/api/pricing")
+			.then(async (response) => {
+				if (!response.ok) throw new Error("Could not load pricing");
+				return response.json();
+			})
+			.then((data: { prices?: PriceRecord[] }) => setPrices(data.prices ?? []))
+			.catch(() => toast.error("We could not load pricing. Please try again."));
+	}, []);
+
+	const pricing = calculateStayPricing(
+		checkIn ? getDateKey(checkIn) : "",
+		checkOut ? getDateKey(checkOut) : "",
+		Number(pax),
+		prices,
+	);
+	const nights = pricing.nights;
+	const estimatedTotal = pricing.total;
 	const firstDay = visibleMonth.getDay();
 	const daysInMonth = new Date(visibleMonth.getFullYear(), visibleMonth.getMonth() + 1, 0).getDate();
 	const calendarDays = Array.from({ length: firstDay + daysInMonth }, (_, index) =>
@@ -84,6 +114,50 @@ export default function HeroSection() {
 
 	function openReservation() {
 		if (nights) setReservationModal(true);
+	}
+
+	async function submitReservation(event: React.FormEvent<HTMLFormElement>) {
+		event.preventDefault();
+		setIsSubmitting(true);
+		const form = event.currentTarget;
+
+		try {
+			const formData = new FormData(form);
+			const response = await fetch("/api/reservation", {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({
+					fullName: formData.get("fullName"),
+					contactNumber: formData.get("contactNumber"),
+					email: formData.get("email"),
+					pax: formData.get("pax"),
+					checkIn: formatDate(checkIn),
+					checkOut: formatDate(checkOut),
+					checkInDate: checkIn ? getPhilippineReservationTimestamp(checkIn, 16) : "",
+					checkOutDate: checkOut ? getPhilippineReservationTimestamp(checkOut, 14) : "",
+					estimatedPrice: `₱${estimatedTotal.toFixed(2)}`,
+					message: formData.get("message"),
+				}),
+			});
+			const result = await response.json();
+
+			if (!response.ok) {
+				toast.error(result.error ?? "We could not send your reservation.");
+				return;
+			}
+
+			form.reset();
+			setPax("1");
+			setCheckIn(null);
+			setCheckOut(null);
+			setActiveField(null);
+			setReservationModal(false);
+			toast.success("Reservation sent successfully. Please check your email for confirmation.");
+		} catch {
+			toast.error("We could not send your reservation. Please try again.");
+		} finally {
+			setIsSubmitting(false);
+		}
 	}
 
 	return (
@@ -144,7 +218,7 @@ export default function HeroSection() {
 						<div className="flex w-full items-center justify-end gap-4 md:contents">
 							<div className="px-1 text-[0.8rem] leading-tight text-gray sm:px-0">
 								<p>Estimated Total</p>
-								<p className="mt-1 whitespace-nowrap text-[0.65rem] text-[#3C4032]">{nights} {nights === 1 ? "Night" : "Nights"} &bull; ₱{NIGHTLY_RATE.toLocaleString()} / night</p>
+								<p className="mt-1 whitespace-nowrap text-[0.65rem] text-[#3C4032]">{nights} {nights === 1 ? "Night" : "Nights"} &bull; {pax ? "Price based on guest number" : "Select guests for pricing"}</p>
 							</div>
 							<p className="whitespace-nowrap text-[0.8rem] text-[#3C4032]">₱{estimatedTotal.toFixed(2)}</p>
 							<button
@@ -162,7 +236,7 @@ export default function HeroSection() {
 			</ScrollReveal>
 
 			{activeField && typeof document !== "undefined" && createPortal(
-				<div className="fixed inset-0 z-50 flex items-center justify-center bg-[#1D211B]/45 p-4 backdrop-blur-sm" onClick={() => setActiveField(null)} role="presentation">
+				<div className="fixed inset-0 z-70 flex items-center justify-center bg-[#1D211B]/45 p-4 backdrop-blur-sm" onClick={() => setActiveField(null)} role="presentation">
 					<div className="flex max-h-[calc(100vh-2rem)] w-full max-w-120 flex-col overflow-y-auto rounded-xl border border-[#E5E0DC] bg-[#F8F6F3] p-5 text-[#3C4032] shadow-[0_18px_40px_rgba(0,0,0,0.3)] sm:p-6" onClick={(event) => event.stopPropagation()} role="dialog" aria-modal="true" aria-label="Choose accommodation dates">
 						<div className="flex items-center justify-between">
 							<div>
@@ -193,11 +267,11 @@ export default function HeroSection() {
 							{calendarDays.map((date, index) => {
 								if (!date) return <span key={`empty-${index}`} className="aspect-square" />;
 								const time = date.getTime();
-								const isReserved = reserved.has(time);
+								const isReserved = reservedDates.has(getDateKey(date));
 								const disabled = date < today || isReserved;
 								const isSelected = time === checkIn?.getTime() || time === checkOut?.getTime();
 								const isBetween = checkIn && checkOut && date > checkIn && date < checkOut;
-								return <button key={time} type="button" disabled={disabled} onClick={() => selectDate(date)} aria-label={`${date.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}${isReserved ? " - reserved" : ""}`} className={`aspect-square rounded-md text-base transition-colors ${isSelected ? "bg-[#3A4235] text-[#F8F6F3]" : isBetween ? "bg-[#E8E1DE]" : isReserved ? "bg-[url('/Reserved.svg')] bg-contain bg-center bg-no-repeat text-transparent" : "hover:bg-[#E8E1DE]"} ${disabled ? "cursor-not-allowed" : ""}`}>{date.getDate()}</button>;
+								return <button key={time} type="button" disabled={disabled} onClick={() => selectDate(date)} aria-label={`${date.toLocaleDateString("en-US", { month: "long", day: "numeric", year: "numeric" })}${isReserved ? " - reserved" : disabled ? " - unavailable" : ""}`} className={`aspect-square rounded-md text-base transition-colors ${isSelected ? "bg-[#3A4235] text-[#F8F6F3]" : isBetween ? "bg-[#E8E1DE]" : isReserved ? "bg-[url('/Reserved.svg')] bg-contain bg-center bg-no-repeat text-transparent" : disabled ? "text-gray/50 line-through" : "hover:bg-[#E8E1DE]"} ${disabled ? "cursor-not-allowed" : ""}`}>{date.getDate()}</button>;
 							})}
 						</div>
 						<div className="mt-3 flex items-center justify-between border-t border-[#E5E0DC] pt-3 text-sm">
@@ -210,7 +284,7 @@ export default function HeroSection() {
 			)}
 
 			{reservationModal && !activeField && typeof document !== "undefined" && createPortal(
-				<div className="fixed inset-0 z-40 flex items-center justify-center bg-[#1D211B]/45 p-4 backdrop-blur-sm" onClick={() => setReservationModal(false)} role="presentation">
+				<div className="fixed inset-0 z-60 flex items-center justify-center bg-[#1D211B]/45 p-4 backdrop-blur-sm" onClick={() => setReservationModal(false)} role="presentation">
 					<div className="max-h-[calc(100dvh-1rem)] w-full max-w-2xl overflow-y-auto rounded-xl border border-[#E5E0DC] bg-[#F8F6F3] p-4 text-[#3C4032] shadow-[0_18px_40px_rgba(0,0,0,0.3)] sm:max-h-[calc(100vh-2rem)] sm:p-7" onClick={(event) => event.stopPropagation()} role="dialog" aria-modal="true" aria-labelledby="hero-reservation-title">
 						<div className="flex items-start justify-between gap-4">
 							<div>
@@ -219,21 +293,26 @@ export default function HeroSection() {
 							</div>
 							<button type="button" onClick={() => setReservationModal(false)} className="rounded-full border border-[#E5E0DC] p-2 sm:p-2.5" aria-label="Close reservation form"><Icon icon="material-symbols:close" className="h-5 w-5" aria-hidden="true" /></button>
 						</div>
-						<form className="mt-4 space-y-3 sm:mt-6 sm:space-y-4" onSubmit={(event) => event.preventDefault()}>
+						<form className="mt-4 space-y-3 sm:mt-6 sm:space-y-4" onSubmit={submitReservation}>
 							<div className="grid gap-3 sm:grid-cols-2 sm:gap-4">
 								<label className="text-sm">
 									<span className="mb-1.5 block">Full Name</span>
-									<input type="text" name="fullName" required className="h-11 w-full rounded-lg border border-[#E5E0DC] bg-[#F3F1EE] px-4 outline-none transition focus:border-[#3A4235] focus:ring-2 focus:ring-[#3A4235]/20 sm:h-12" />
+									<input type="text" name="fullName" placeholder="Enter your full name" required className="h-11 w-full rounded-lg border border-[#E5E0DC] bg-[#F3F1EE] px-4 outline-none transition focus:border-[#3A4235] focus:ring-2 focus:ring-[#3A4235]/20 sm:h-12" />
 								</label>
 								<label className="text-sm">
 									<span className="mb-1.5 block">Contact Number</span>
-									<input type="tel" name="contactNumber" required className="h-11 w-full rounded-lg border border-[#E5E0DC] bg-[#F3F1EE] px-4 outline-none transition focus:border-[#3A4235] focus:ring-2 focus:ring-[#3A4235]/20 sm:h-12" />
+									<input type="tel" name="contactNumber" placeholder="Enter your contact number" required className="h-11 w-full rounded-lg border border-[#E5E0DC] bg-[#F3F1EE] px-4 outline-none transition focus:border-[#3A4235] focus:ring-2 focus:ring-[#3A4235]/20 sm:h-12" />
 								</label>
 							</div>
 
 							<label className="block text-sm">
 								<span className="mb-1.5 block">Email Address</span>
-								<input type="email" name="email" required className="h-11 w-full rounded-lg border border-[#E5E0DC] bg-[#F3F1EE] px-4 outline-none transition focus:border-[#3A4235] focus:ring-2 focus:ring-[#3A4235]/20 sm:h-12" />
+								<input type="email" name="email" placeholder="you@example.com" required className="h-11 w-full rounded-lg border border-[#E5E0DC] bg-[#F3F1EE] px-4 outline-none transition focus:border-[#3A4235] focus:ring-2 focus:ring-[#3A4235]/20 sm:h-12" />
+							</label>
+
+							<label className="block text-sm">
+								<span className="mb-1.5 block">Pax / Guest Number</span>
+								<input type="number" name="pax" min="1" max="4" step="1" placeholder="1-4 guests" value={pax} onChange={(event) => setPax(event.target.value)} required className="h-11 w-full rounded-lg border border-[#E5E0DC] bg-[#F3F1EE] px-4 outline-none transition focus:border-[#3A4235] focus:ring-2 focus:ring-[#3A4235]/20 sm:h-12" />
 							</label>
 
 							<div>
@@ -258,17 +337,17 @@ export default function HeroSection() {
 
 							<label className="block text-sm">
 								<span className="mb-1.5 block">Estimated Price</span>
-								<input type="text" name="estimatedPrice" value={`₱${estimatedTotal.toFixed(2)}`} readOnly className="h-11 w-full rounded-lg border border-[#E5E0DC] bg-[#EDEAE6] px-4 outline-none sm:h-12" />
+								<input type="text" name="estimatedPrice" placeholder="Calculated total" value={estimatedTotal ? `₱${estimatedTotal.toFixed(2)}` : ""} readOnly className="h-11 w-full rounded-lg border border-[#E5E0DC] bg-[#EDEAE6] px-4 outline-none sm:h-12" />
 							</label>
 
 							<label className="block text-sm">
 								<span className="mb-1.5 block">Message</span>
-								<textarea name="message" rows={4} className="h-24 w-full resize-y rounded-lg border border-[#E5E0DC] bg-[#F3F1EE] px-4 py-3 outline-none transition focus:border-[#3A4235] focus:ring-2 focus:ring-[#3A4235]/20 sm:h-auto" />
+								<textarea name="message" rows={4} placeholder="Add a message (optional)" className="h-24 w-full resize-y rounded-lg border border-[#E5E0DC] bg-[#F3F1EE] px-4 py-3 outline-none transition focus:border-[#3A4235] focus:ring-2 focus:ring-[#3A4235]/20 sm:h-auto" />
 							</label>
 
 							<div className="flex justify-end border-t border-[#E5E0DC] pt-4">
-								<button type="submit" className="flex items-center gap-2 rounded-lg bg-[#3A4235] px-6 py-3 text-sm text-[#F8F6F3] transition hover:bg-[#53604B]">
-									Submit Reservation
+								<button type="submit" disabled={isSubmitting} className="flex items-center gap-2 rounded-lg bg-[#3A4235] px-6 py-3 text-sm text-[#F8F6F3] transition hover:bg-[#53604B] disabled:cursor-not-allowed disabled:opacity-60">
+									{isSubmitting ? "Sending..." : "Submit Reservation"}
 									<Icon icon="material-symbols:arrow-forward-rounded" className="h-5 w-5" aria-hidden="true" />
 								</button>
 							</div>

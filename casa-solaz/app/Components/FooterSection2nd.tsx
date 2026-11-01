@@ -63,7 +63,7 @@ export default function FooterSection2nd() {
                                 </a>
                                 <a href="tel:+639175963432" className="flex items-center justify-center gap-2 lg:justify-start">
                                     <Icon icon="carbon:phone" />+63 917 596 3432</a>
-                                <address className="flex min-w-0 max-w-full items-center justify-center gap-2 break-words not-italic lg:justify-start">
+                                <address className="flex min-w-0 max-w-full items-center justify-center gap-2 wrap-break-words not-italic lg:justify-start">
                                     <Icon icon="carbon:location" />
                                     SMDC Wind Residences, Tagaytay City, Cavite</address>
                             </div>
