@@ -1,11 +1,10 @@
 import AboutUsSection from "./Components/AboutUsSection";
-import AmenitiesSection from "./Components/AmenitiesSection";
 import AmenitiesSection2nd from "./Components/AmenitiesSection2nd";
 import FooterSection from "./Components/FooterSection";
+import GallerySection from "./Components/GallerySection";
 import HeroSection from "./Components/HeroSection";
+import LocationSection from "./Components/LocationSection";
 import NavBar from "./Components/NavBar";
-import OfferSection from "./Components/OfferSection";
-import OurOfferingSection from "./Components/OurOfferings";
 import TestimonialSection from "./Components/TestimonialSection";
 
 export default function Home() {
@@ -14,11 +13,10 @@ export default function Home() {
       <NavBar/>
       <HeroSection/>
       <AboutUsSection/>
-      <OurOfferingSection/>
       <AmenitiesSection2nd/>
-      <AmenitiesSection/>
-      <OfferSection/>
+      <GallerySection/>
       <TestimonialSection/>
+      <LocationSection/> 
       <FooterSection/>
     </main>
   );

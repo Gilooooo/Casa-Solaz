@@ -17,6 +17,8 @@ const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const dateFormat = new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric" });
 const monthStart = (date: Date) => new Date(date.getFullYear(), date.getMonth(), 1);
 const formatDate = (date: Date | null) => (date ? dateFormat.format(date) : "-");
+const Stick_Nav_VH = 1;
+
 
 export default function HeroSection() {
 	const [isSticky, setIsSticky] = useState(false);
@@ -31,6 +33,10 @@ export default function HeroSection() {
 	const [visibleMonth, setVisibleMonth] = useState(monthStart(today));
 	const heroRef = useRef<HTMLElement>(null);
 	const bookingRef = useRef<HTMLDivElement>(null);
+	const bookingTopRef = useRef<number | null>(null);
+	const isStickyRef = useRef(false);
+
+
 
 	useEffect(() => {
 		const handleScroll = () => {
@@ -39,10 +45,19 @@ export default function HeroSection() {
 
 			if (!hero || !booking) return;
 
-			const navbarHeight = window.innerHeight * 0.12;
-			const heroBottom = hero.getBoundingClientRect().bottom + window.scrollY;
-			const bookingTop = heroBottom - booking.offsetHeight / 2;
-			setIsSticky(window.scrollY >= bookingTop - navbarHeight);
+			const stickyTop = (window.innerHeight * Stick_Nav_VH) / 100;
+			if (!isStickyRef.current) {
+				bookingTopRef.current = booking.getBoundingClientRect().top + window.scrollY;
+			}
+
+			const bookingTop = bookingTopRef.current;
+			if (bookingTop === null) return;
+
+			const shouldStick = window.scrollY + stickyTop >= bookingTop;
+			if (shouldStick !== isStickyRef.current) {
+				isStickyRef.current = shouldStick;
+				setIsSticky(shouldStick);
+			}
 		};
 
 		handleScroll();
@@ -83,6 +98,8 @@ export default function HeroSection() {
 	);
 	const nights = pricing.nights;
 	const estimatedTotal = pricing.total;
+	const guestCount = Number(pax);
+	const hasValidGuestCount = Number.isInteger(guestCount) && guestCount >= 1 && guestCount <= 4;
 	const firstDay = visibleMonth.getDay();
 	const daysInMonth = new Date(visibleMonth.getFullYear(), visibleMonth.getMonth() + 1, 0).getDate();
 	const calendarDays = Array.from({ length: firstDay + daysInMonth }, (_, index) =>
@@ -163,74 +180,90 @@ export default function HeroSection() {
 	return (
 		<section
 			ref={heroRef}
-			className="relative flex min-h-screen sm:min-h-[90vh] w-full items-center justify-center bg-cover bg-center pb-28 sm:pb-24"
+			className="relative flex min-h-screen w-full items-center justify-center bg-cover bg-center pb-28 sm:pb-24"
 			style={{ backgroundImage: "url('/Image/HeroPage/Hero.webp')" }}
 		>
 			<div className="absolute inset-0 bg-black/25" />
 			<ScrollReveal className="container relative z-0 text-center text-[#E8D8D8]">
 				<div className="flex flex-col items-center justify-center gap-2">
-					<h6 className="text-xs lowercase tracking-[0.3em] italic md:text-lg">
-						A place where comfort meets calm.
-					</h6>
 					<Image
 						src="/Image/HeroPage/Casa Solaz.webp"
 						alt="Casa Solaz Logo"
-						width={1000}
+						width={900}
 						height={250}
-						className="relative z-0 mx-auto mt-4 h-auto w-[min(100vw,1000px)] md:mt-6 px-10 sm:px-0"
+						data-hero-logo
+						loading="eager"
+						className="relative z-0 mx-auto mt-4 h-auto w-[min(82vw,560px)] px-10 sm:mt-6 sm:w-[min(48vw,700px)] sm:px-0 lg:w-[min(42vw,700px)] transition-opacity duration-300 [:root[data-loading]_&]:opacity-0"
 					/>
+					<h6 className="text-[0.65rem] font-medium tracking-[0.24em] italic sm:text-sm md:text-base lg:text-lg">
+						A place where comfort meets calm.
+					</h6>
 					<button
 						type="button"
 						onClick={openReservation}
-						className=" mt-6 rounded-full border border-[#3A4235] bg-[#3A4235] px-6 py-3 text-sm font-semibold uppercase text-[#E8D8D8] transition hover:bg-[#E8D8D8] hover:text-[#3A4235] disabled:cursor-not-allowed disabled:opacity-60 sm:hidden"
+						className="mt-6 hidden rounded-full border border-moss-green bg-moss-green px-6 py-3 text-sm font-semibold uppercase text-soft-white transition hover:bg-soft-white hover:text-moss-green disabled:cursor-not-allowed disabled:opacity-60 sm:hidden"
 					>
 						Book Now
 					</button>
 				</div>
 			</ScrollReveal>
 			<ScrollReveal
-				className={`hidden left-0 w-full sm:block ${
-					isSticky ? "fixed top-[12vh] z-40" : "absolute bottom-0 z-20"
+				className={`left-0 w-full ${
+					isSticky ? "fixed top-[1vh] z-40" : "absolute bottom-14 z-20"
 				}`}
 			>
 				<div
 					ref={bookingRef}
-					className={`container relative left-1/2 w-[calc(100%-2rem)] -translate-x-1/2 rounded-4xl border border-[#A7AAA4] bg-[#E5E5E5]/95 p-3 text-[#3C4032] shadow-[0_14px_35px_rgba(0,0,0,0.18)] backdrop-blur transition-transform duration-200 ease-out will-change-transform sm:w-[calc(100%-3rem)] sm:px-7 sm:py-7 md:rounded-full ${isSticky ? "" : "translate-y-1/2"}`}
+					className={`relative left-1/2 w-[calc(100%-2rem)] -translate-x-1/2 rounded-2xl bg-beige p-2 text-walnut shadow-[0_14px_35px_rgba(0,0,0,0.18)] transition-transform duration-200 ease-out will-change-transform sm:w-[calc(100%-3rem)] sm:px-4 sm:py-4 lg:w-[76%] lg:max-w-6xl ${isSticky ? "" : "translate-y-0"}`}
 				>
-					<div className="flex flex-col gap-3 md:grid md:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_148px_84px_142px] md:items-center md:gap-3">
+					<div className="grid gap-2 md:grid-cols-2 lg:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_minmax(150px,1fr)_184px] lg:items-center lg:gap-3">
 						<div className="flex w-full gap-2 sm:gap-3 md:contents">
 							{FIELDS.map(([field, label]) => (
 								<button
 									key={field}
 									type="button"
 									onClick={() => openPicker(field)}
-									className={`flex h-11 min-w-0 flex-1 items-center gap-2 rounded-xl border bg-[#F8F6F3] px-3 text-left focus:outline-none focus:ring-2 focus:ring-[#3A4235]/20 sm:h-13 md:rounded-full ${activeField === field ? "border-[#3A4235]" : "border-[#000000]"}`}
+									className={`flex h-10 min-w-0 flex-1 items-center gap-2 rounded-xl border border-transparent bg-[#CBBCA4] px-3 text-left focus:outline-none focus:ring-2 focus:ring-moss-green/20 sm:h-11 ${activeField === field ? "border-moss-green" : ""}`}
 									aria-label={`Choose ${label.toLowerCase()} date`}
 								>
-									<Icon icon="material-symbols:calendar-month-outline" className="h-4 w-4 shrink-0 text-[#3A4235]" aria-hidden="true" />
+									<Icon icon="material-symbols:calendar-month-outline" className="h-4 w-4 shrink-0 text-[#3C4032]" aria-hidden="true" />
 									<span className="flex min-w-0 flex-col leading-none">
-										<span className="text-[0.55rem] uppercase tracking-wide text-gray">{label}</span>
-										<span className="mt-1 truncate text-[0.65rem]">{formatDate(field === "checkIn" ? checkIn : checkOut)}</span>
+										<span className="text-[0.6rem] font-semibold uppercase tracking-wider text-[#757260]">{label}</span>
+										<span className="mt-1 truncate text-[0.8rem] font-bold text-walnut">{formatDate(field === "checkIn" ? checkIn : checkOut)}</span>
 									</span>
 								</button>
 							))}
 						</div>
-						<div className="flex w-full items-center justify-end gap-4 md:contents">
-							<div className="px-1 text-[0.8rem] leading-tight text-gray sm:px-0">
-								<p>Estimated Total</p>
-								<p className="mt-1 whitespace-nowrap text-[0.65rem] text-[#3C4032]">{nights} {nights === 1 ? "Night" : "Nights"} &bull; {pax ? "Price based on guest number" : "Select guests for pricing"}</p>
+						<label className="relative flex min-w-0 flex-col gap-1">
+							<span className="sr-only">Guests</span>
+							<div className="flex h-10 items-center gap-2 rounded-xl border border-transparent bg-[#CBBCA4] px-3 sm:h-11">
+								<Icon icon="material-symbols:person-outline" className="h-4 w-4 shrink-0 text-[#3C4032]" aria-hidden="true" />
+								<span className="flex min-w-0 flex-1 flex-col leading-none">
+									<span className="text-[0.6rem] font-semibold tracking-wider text-[#757260]">Guests</span>
+									<input
+										type="number"
+										name="pax"
+										min="1"
+										max="4"
+										step="1"
+										value={pax}
+										onChange={(event) => setPax(event.target.value)}
+										className="mt-1 w-full [appearance:textfield] bg-transparent text-[0.8rem] font-bold text-walnut outline-none placeholder:text-walnut [&::-webkit-inner-spin-button]:appearance-none [&::-webkit-outer-spin-button]:appearance-none" placeholder="How many humans?"
+										aria-describedby="hero-guest-note"
+									/>
+								</span>
 							</div>
-							<p className="whitespace-nowrap text-[0.8rem] text-[#3C4032]">₱{estimatedTotal.toFixed(2)}</p>
-							<button
-								type="button"
-								onClick={openReservation}
-								disabled={!nights}
-								className="flex h-11 items-center justify-center gap-2 rounded-xl bg-[#3A4235] px-4 text-xs font-medium uppercase text-[#F8F6F3] transition hover:bg-[#E8D8D8] hover:text-[#3A4235] disabled:cursor-not-allowed disabled:opacity-50 sm:h-10 sm:px-5 md:rounded-full"
-							>
-								Book Now
-								<Icon icon="material-symbols:arrow-forward-rounded" className="h-4 w-4" aria-hidden="true" />
-							</button>
-						</div>
+							<span id="hero-guest-note" className="absolute left-2 top-full mt-0.5 whitespace-nowrap text-[0.5rem] text-warm-taupe lg:hidden">The maximum is only 4 Pax</span>
+						</label>
+						<button
+							type="button"
+							onClick={openReservation}
+							disabled={!nights || !hasValidGuestCount}
+							className="flex h-10 items-center justify-center gap-2 rounded-full bg-moss-green px-4 text-sm font-semibold uppercase tracking-wide text-soft-white transition hover:bg-soft-black disabled:cursor-not-allowed disabled:opacity-50 sm:h-11 sm:px-5"
+						>
+							Book Now
+							<Icon icon="material-symbols:arrow-forward-rounded" className="h-4 w-4" aria-hidden="true" />
+						</button>
 					</div>
 				</div>
 			</ScrollReveal>

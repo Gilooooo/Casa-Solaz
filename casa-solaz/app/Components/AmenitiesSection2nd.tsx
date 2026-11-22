@@ -2,56 +2,35 @@ import { Icon } from "@iconify/react";
 import ScrollReveal from "./ScrollReveal";
 
 const amenities = [
-    {
-        name: "Wi-Fi",
-        icon: "material-symbols:wifi",
-    },
-    {
-        name: "Pets Allowed",
-        icon: "material-symbols:pets",
-    },
-    {
-        name: "Netflix",
-        icon: "simple-icons:netflix",
-    },
-    {
-        name: "Air-conditioned",
-        icon: "material-symbols:air",
-    },
-    {
-        name: "Alexa Powered",
-        icon: "material-symbols:mic",
-    },
-    {
-        name: "Games",
-        icon: "material-symbols:stadia-controller",
-    },
+    { name: "Kitchenette", icon: "mdi:pot-mix" },
+    { name: "Smart Aircon", icon: "mdi:air-conditioner" },
+    { name: "Wi-fi", icon: "material-symbols:wifi" },
+    { name: "Netflix", icon: "simple-icons:netflix" },
+    { name: "Games", icon: "mdi:cards-playing" },
+    { name: "Self Check-in", icon: "mdi:key" },
+    { name: "Smart lock", icon: "mdi:lock" },
 ];
 
 export default function AmenitiesSection2nd() {
     return (
-        <main className="min-h-[70vh] w-full bg-[#E5E5E5] px-6 py-16 text-[#3C4032] sm:px-10 lg:px-16">
+        <main className="w-full min-h-[65vh] bg-moss-green px-6 py-16 text-beige sm:px-10 sm:py-20 lg:px-16 grid place-items-center">
             <ScrollReveal className="w-full">
-            <section className="mx-auto flex min-h-[calc(70vh-8rem)] w-full container flex-col justify-center">
-                <h2 className="text-4xl leading-none sm:text-5xl font-semibold">Comfort Awaits You</h2>
-                <p className="mt-2 w-full text-sm text-[#3C4032]/75 sm:text-base">
-                    Every detail of your stay is designed for comfort, so you can relax, recharge, and feel right at home.
-                </p>
+                <section className="container mx-auto flex flex-col items-center text-center">
+                    <h2 className="text-3xl font-semibold tracking-wide sm:text-4xl">Comfort Awaits You</h2>
 
-                <div className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-3 lg:grid-rows-2">
-                    {amenities.map((amenity) => (
-                        <article
-                            key={amenity.name}
-                            className="flex items-center gap-3 rounded-lg bg-[#E5E5E5] p-3 sm:p-4"
-                        >
-                            <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-md bg-[#EADBD8] text-[#3C4032]">
-                                <Icon icon={amenity.icon} className="h-5 w-5" aria-hidden="true" />
-                            </div>
-                            <h3 className="text-[clamp(1rem,1.6vw,1.25rem)] font-medium leading-tight">{amenity.name}</h3>
-                        </article>
-                    ))}
-                </div>
-            </section>
+                    <ul className="mt-12 flex flex-wrap justify-center gap-x-6 gap-y-8 sm:mt-14">
+                        {amenities.map((amenity) => (
+                            <li key={amenity.name} className="flex w-24 flex-col items-center gap-2 sm:w-28">
+                                <Icon icon={amenity.icon} className="h-9 w-9" aria-hidden="true" />
+                                <span className="text-xs font-medium sm:text-sm">{amenity.name}</span>
+                            </li>
+                        ))}
+                    </ul>
+
+                    <p className="mt-12 max-w-3xl text-sm font-semibold sm:mt-14 sm:text-base">
+                        Every detail of your stay is designed for comfort, so you can relax, recharge, and feel right at home.
+                    </p>
+                </section>
             </ScrollReveal>
         </main>
     );

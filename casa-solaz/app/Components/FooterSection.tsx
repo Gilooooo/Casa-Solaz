@@ -1,79 +1,90 @@
 import Image from "next/image";
+import Link from "next/link";
 import { Icon } from "@iconify/react";
 import ScrollReveal from "./ScrollReveal";
-import Link from "next/dist/client/link";
+
+const columns = [
+    { title: "Explore", links: [["Home", "/"], ["Gallery", "/Gallery"], ["Booking Policy", "/BookingPolicy"]] },
+    { title: "Guest guide", links: [["Reservation", "/Reservation"], ["House rules", "/HouseRules"], ["FAQs", "/FAQs"], ["Contact us", "/ContactUs"]] },
+] as const;
+
+const socials = [
+    ["Facebook", "ri:facebook-circle-fill", "https://www.facebook.com/casasolazph"],
+    ["Threads", "ri:threads-fill", "https://www.threads.com/@casasolaz.ph"],
+    ["Instagram", "ri:instagram-line", "https://www.instagram.com/casasolaz.ph/"],
+    ["TikTok", "ri:tiktok-fill", "https://www.tiktok.com/@casasolazph"],
+] as const;
 
 export default function FooterSection() {
     return (
-            <footer className="flex h-auto min-h-[65vh] w-full items-center justify-center bg-[#E5E5E5] px-4 py-8 text-[#3C4032] sm:h-auto sm:min-h-[65vh] sm:px-8 sm:py-10 lg:h-[65vh] lg:min-h-0 lg:px-12">
-            <ScrollReveal className="h-full w-full">
-            <main className="flex h-auto min-h-0 w-full sm:w-full flex-col justify-between rounded-xl bg-[#E9DCD9] p-7 sm:h-auto sm:min-h-87.5 sm:px-20 sm:py-14 lg:h-[90%] lg:min-h-0 lg:px-12 lg:py-12 xl:px-20 xl:py-16">
-                <div className="flex flex-1 w-full flex-col items-start justify-start gap-0 sm:gap-8 md:flex-row lg:gap-4 xl:gap-8">
-                    <div className="flex w-full justify-center self-center md:w-1/2 lg:w-1/4 xl:w-1/3">
+        <footer className="w-full bg-beige px-6 py-10 text-moss-green sm:px-10 lg:px-16">
+            <ScrollReveal className="mx-auto w-full max-w-6xl 2xl:max-w-352">
+                <div className="flex flex-col gap-4 border-b border-moss-green/20 pb-6 sm:flex-row sm:items-center sm:justify-between">
+                    <div>
+                        <h2 className="text-xl font-bold sm:text-2xl">Your next pause starts here.</h2>
+                        <p className="mt-1 text-sm">A little less rush. A little more—</p>
+                    </div>
+                    <Link
+                        href="/Reservation"
+                        className="inline-flex w-fit items-center gap-2 rounded-md bg-moss-green px-5 py-3 text-xs font-semibold uppercase text-beige transition hover:bg-soft-black focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-moss-green"
+                    >
+                        Book Now
+                        <Icon icon="material-symbols:arrow-outward" className="h-4 w-4" aria-hidden="true" />
+                    </Link>
+                </div>
+
+                <div className="grid grid-cols-2 gap-x-6 gap-y-8 py-8 lg:grid-cols-[1.3fr_1fr_1fr_1.3fr] lg:gap-x-10">
+                    <div className="col-span-2 lg:col-span-1">
                         <Image
                             src="/Green%20Logo%20with%20trade%20line.svg"
                             alt="Casa Solaz"
                             width={300}
                             height={300}
-                            className="h-auto w-full max-w-100 sm:p-0 px-14"
+                            className="h-auto w-full max-w-64"
                         />
                     </div>
-                    <div className="flex w-full flex-col items-center justify-start gap-4 sm:gap-8 md:w-1/2 lg:w-3/4 lg:flex-row lg:items-start lg:gap-6 xl:w-2/3 xl:gap-20">
-                        <div className="w-full p-2 sm:p-6 lg:p-3 lg:pt-0 sm:pt-0">
-                            <h2 className="mb-3 text-xl italic text-center xl:text-2xl">Quick Links</h2>
-                            <nav className="grid grid-cols-3 gap-x-6 gap-y-2 text-base lg:text-start text-center xl:gap-y-10 xl:gap-x-10 xl:text-lg">
-                                <Link href="/AboutUs">About Us</Link>
-                                <Link href="/ContactUs">Contact Us</Link>
-                                <Link href="/Gallery">Gallery</Link>
-                                <Link href="/OurService">Our Service</Link>
-                                <Link href="/OurService">Ammenities</Link>
-                                <Link href="/FAQs">FAQs</Link>
-                            </nav>
+
+                    {columns.map(({ title, links }) => (
+                        <nav key={title} aria-label={title}>
+                            <h3 className="text-base font-bold">{title}</h3>
+                            <ul className="mt-3 space-y-2 text-sm">
+                                {links.map(([label, href]) => (
+                                    <li key={label}>
+                                        <Link href={href} className="hover:underline">{label}</Link>
+                                    </li>
+                                ))}
+                            </ul>
+                        </nav>
+                    ))}
+
+                    <div className="col-span-2 lg:col-span-1">
+                        <div className="relative aspect-video w-full overflow-hidden rounded-lg">
+                            <Image
+                                src="/Image/Footer/FooterImage.webp"
+                                alt="Casa Solaz bedroom"
+                                fill
+                                sizes="(min-width: 1024px) 25vw, 100vw"
+                                className="object-cover"
+                            />
                         </div>
-                        <div className="w-full p-2 sm:p-6 lg:p-3 lg:pt-0 sm:pt-0">
-                            <h2 className="mb-3 text-xl italic text-center xl:text-2xl">Our Information</h2>
-                            <div className="flex flex-col items-center gap-7 text-center text-base lg:items-start lg:text-start xl:text-lg">
-                                <a href="mailto:inquiries@casasolaztagaytay.com" className="flex min-w-0 max-w-full items-center justify-center gap-2 break-all lg:justify-start">
-                                    <Icon icon="carbon:email" className="sm:h-5 sm:w-5 h-6 w-6"/>
-                                    <span className="wrap-break-words sm:text-base text-sm">
-                                        inquiries@casasolaztagaytay.com
-                                    </span>
-                                </a>
-                                <a href="tel:+639175963432" className="flex items-center justify-center gap-2 lg:justify-start">
-                                    <Icon icon="carbon:phone" className="sm:h-5 sm:w-5 h-6 w-6"/>
-                                    <span className="wrap-break-words sm:text-base text-sm">
-                                        +63 917 596 3432
-                                    </span>
-                                </a>
-                                <address className="flex min-w-0 max-w-full items-center justify-center gap-2 not-italic lg:justify-start">
-                                    <Icon icon="carbon:location" className="sm:h-5 sm:w-5 h-6 w-6"/>
-                                    <span className="wrap-break-words sm:text-base text-sm">
-                                        SMDC Wind Residences, Tagaytay City, Cavite
-                                    </span>
-                                </address>
-                            </div>
+                        <div className="mt-2 flex justify-end" aria-label="Social media links">
+                            {socials.map(([label, icon, href]) => (
+                                <Link key={label} href={href} aria-label={label} className="p-2">
+                                    <Icon icon={icon} className="h-7 w-7" aria-hidden="true" />
+                                </Link>
+                            ))}
                         </div>
                     </div>
                 </div>
 
-                <div className="flex items-center justify-between sm:justify-center gap-5 py-2 px-0 sm:p-2 text-lg sm:mt-0 mt-5">
-                    <p className ="text-sm sm:text-base">&copy; 2026 All rights reserved</p>
-                    <div className="flex items-center gap-3" aria-label="Social media links">
-                        <Link href="https://www.facebook.com/casasolazph" aria-label="Facebook">
-                            <Icon icon="ri:facebook-fill" />
-                        </Link>
-                        <Link href="https://www.threads.com/@casasolaz.ph" aria-label="X">
-                            <Icon icon="ri:threads-fill" />
-                        </Link>
-                        <Link href="https://www.instagram.com/casasolaz.ph/" aria-label="Instagram">
-                            <Icon icon="ri:instagram-line" />
-                        </Link>
-                        <Link href="https://www.tiktok.com/@casasolazph" aria-label="TikTok">
-                            <Icon icon="ri:tiktok-fill" />
-                        </Link>
-                    </div>
+                <div className="flex flex-col gap-2 text-xs sm:flex-row sm:items-center sm:justify-between">
+                    <p>&copy; 2026. All Rights Reserved</p>
+                    <p className="flex items-center gap-2 uppercase">
+                        <Link href="/PrivacyPolicy" className="hover:underline">Privacy Policy</Link>
+                        <span aria-hidden="true">|</span>
+                        <Link href="/Terms" className="hover:underline">Terms &amp; Condition</Link>
+                    </p>
                 </div>
-            </main>
             </ScrollReveal>
         </footer>
     );
