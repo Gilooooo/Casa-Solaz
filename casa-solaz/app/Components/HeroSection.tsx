@@ -17,6 +17,8 @@ const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 const dateFormat = new Intl.DateTimeFormat("en-US", { month: "short", day: "numeric", year: "numeric" });
 const monthStart = (date: Date) => new Date(date.getFullYear(), date.getMonth(), 1);
 const formatDate = (date: Date | null) => (date ? dateFormat.format(date) : "-");
+const Stick_Nav_VH = 1;
+
 
 export default function HeroSection() {
 	const [isSticky, setIsSticky] = useState(false);
@@ -34,6 +36,8 @@ export default function HeroSection() {
 	const bookingTopRef = useRef<number | null>(null);
 	const isStickyRef = useRef(false);
 
+
+
 	useEffect(() => {
 		const handleScroll = () => {
 			const hero = heroRef.current;
@@ -41,7 +45,7 @@ export default function HeroSection() {
 
 			if (!hero || !booking) return;
 
-			const navbarHeight = window.innerHeight * 0.12;
+			const stickyTop = (window.innerHeight * Stick_Nav_VH) / 100;
 			if (!isStickyRef.current) {
 				bookingTopRef.current = booking.getBoundingClientRect().top + window.scrollY;
 			}
@@ -49,7 +53,7 @@ export default function HeroSection() {
 			const bookingTop = bookingTopRef.current;
 			if (bookingTop === null) return;
 
-			const shouldStick = window.scrollY + navbarHeight >= bookingTop;
+			const shouldStick = window.scrollY + stickyTop >= bookingTop;
 			if (shouldStick !== isStickyRef.current) {
 				isStickyRef.current = shouldStick;
 				setIsSticky(shouldStick);
@@ -188,7 +192,7 @@ export default function HeroSection() {
 						width={900}
 						height={250}
 						data-hero-logo
-						loading="lazy"
+						loading="eager"
 						className="relative z-0 mx-auto mt-4 h-auto w-[min(82vw,560px)] px-10 sm:mt-6 sm:w-[min(48vw,700px)] sm:px-0 lg:w-[min(42vw,700px)] transition-opacity duration-300 [:root[data-loading]_&]:opacity-0"
 					/>
 					<h6 className="text-[0.65rem] font-medium tracking-[0.24em] italic sm:text-sm md:text-base lg:text-lg">
@@ -205,7 +209,7 @@ export default function HeroSection() {
 			</ScrollReveal>
 			<ScrollReveal
 				className={`left-0 w-full ${
-					isSticky ? "fixed top-[12vh] z-40" : "absolute bottom-14 z-20"
+					isSticky ? "fixed top-[1vh] z-40" : "absolute bottom-14 z-20"
 				}`}
 			>
 				<div
