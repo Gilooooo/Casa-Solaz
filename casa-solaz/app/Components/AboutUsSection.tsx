@@ -1,32 +1,45 @@
 import Image from "next/image";
-import { Cormorant_Garamond } from 'next/font/google';
 import ScrollReveal from "./ScrollReveal";
 
-const cormorant = Cormorant_Garamond({
-  subsets: ['latin'],
-  weight: ['300', '400', '500', '600', '700'],
-});
+const GOALS = [
+	["Our mission", "To provide guests with a safe, comfortable, and home-like stay while delivering excellent customer service."],
+	["Our vision", "To become one of the top-rated short-term rentals in the area known for comfort, convenience, and quality service."],
+] as const;
 
 export default function AboutUsSection() {
-    return (
-        <main className="flex min-h-screen w-full justify-center items-center bg-[#E5E5E5] px-6 pb-16 pt-34 text-[#3C4032] sm:px-10 lg:px-16">
-            <ScrollReveal className="w-full container">
-                <section className="flex w-full container flex-col">
-                    <p className="text-xl uppercase tracking-widest text-[#3A4235]/90 font-bold">About Us</p>
-                    <div className="mt-8 flex flex-col gap-12 md:mt-9 md:flex-row md:justify-evenly md:items-center md:gap-16 lg:gap-24">
-                        <div className="w-full max-w-md md:flex-1">
-                            <h1 className={` ${cormorant.className} text-6xl font-semibold leading-none sm:text-7xl`}>Casa <span className="italic">Sol</span>az</h1>
-                            <p className="mt-5 sm:ms-4 max-w-lg text-lg leading-[1.4] text-[#3C4032]/80 sm:text-xl">
-                                Experience the perfect blend of modern comfort and peaceful tranquility at Casa Solaz Tagaytay. Our boutique stay offers beautifully curated spaces and premium comfort tailored to complement Tagaytay&apos;s signature chilly climate. Leave the noise behind, unwind in style, and enjoy a seamless, rejuvenating staycation.
-                            </p>
-                        </div>
-                        <div className="relative mx-auto h-136 w-full max-w-xl sm:h-152 md:mx-0 md:flex-1">
-                            <Image src="/Image/HeroPage/Hero.webp" alt="Casa Solaz interior" width={300} height={300} className="absolute left-0 top-0 h-72 w-72 rounded-lg object-cover sm:h-80 sm:w-80 lg:h-96 lg:w-96"/>
-                            <Image src="/Image/HeroPage/Hero.webp" alt="Casa Solaz interior" width={300} height={300} className="absolute bottom-0 right-0 h-72 w-72 rounded-lg object-cover sm:h-80 sm:w-80 lg:h-96 lg:w-96"/>
-                        </div>
-                    </div>
-                </section>
-            </ScrollReveal>
-        </main>
-    );
+	return (
+		<main className="flex min-h-screen w-full items-center justify-center bg-soft-white px-6 pb-16 pt-16 text-walnut sm:px-10 lg:px-16">
+			<ScrollReveal className="container w-full">
+				<section className="grid items-center gap-10 md:grid-cols-[minmax(0,5fr)_minmax(0,8fr)] md:gap-16">
+					<div className="relative mx-auto aspect-3/4 w-full max-w-sm overflow-hidden rounded-2xl md:max-w-none">
+						<Image
+							src="/Image/AboutUs/AboutUs.webp"
+							alt="Casa Solaz interior"
+							fill
+							sizes="(min-width: 768px) 36vw, 90vw"
+							className="object-cover"
+						/>
+					</div>
+					<div>
+						<p className="text-sm font-bold uppercase tracking-[0.25em] text-moss-green sm:text-base">About Casa Solaz</p>
+						<h1 className="mt-6 text-2xl font-bold leading-tight sm:text-3xl">
+							<span className="block">A cozy stay, just like home.</span>
+							<span className="block">Your place to feel at home.</span>
+						</h1>
+						<p className="mt-8 text-base leading-relaxed">
+							A cozy and thoughtfully designed staycation space where comfort meets calm. Whether you&rsquo;re unwinding, celebrating, or simply taking a break, Casa Solaz is your home away from home, made for moments worth remembering.
+						</p>
+						<div className="mt-10 grid gap-8 sm:grid-cols-2 sm:gap-10">
+							{GOALS.map(([title, text]) => (
+								<div key={title} className="border-t border-walnut/10 pt-3">
+									<h2 className="text-sm font-bold text-moss-green">{title}</h2>
+									<p className="mt-2 text-sm leading-[1.75] text-walnut/70">{text}</p>
+								</div>
+							))}
+						</div>
+					</div>
+				</section>
+			</ScrollReveal>
+		</main>
+	);
 }

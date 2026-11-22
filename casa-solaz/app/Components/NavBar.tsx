@@ -1,13 +1,12 @@
 "use client";
 
-import Logo from "@/app/Components/Logo";
-import { Icon } from "@iconify/react";
+// import { Icon } from "@iconify/react";
 import Link from "next/dist/client/link";
 import { useEffect, useState } from "react";
 
 export default function NavBar({ darkText = false }: { darkText?: boolean }) {
     const [isScrolled, setIsScrolled] = useState(false);
-    const [isMenuOpen, setIsMenuOpen] = useState(false);
+    // const [isMenuOpen, setIsMenuOpen] = useState(false);
 
     useEffect(() => {
         const handleScroll = () => setIsScrolled(window.scrollY > 0);
@@ -31,14 +30,11 @@ export default function NavBar({ darkText = false }: { darkText?: boolean }) {
 
             <main
                     style={{ paddingInline: "clamp(1.25rem, 5vw, 3rem)" }}
-                    className={`container relative z-10 flex w-full items-center justify-between transition-colors duration-200 ${
+                    className={`container relative z-10 flex w-full items-center justify-center transition-colors duration-200 ${
                     isScrolled || darkText ? "text-[#3A4235]" : "text-[#E8D8D8]"
                 }`}
             >
-                <div>
-                    <Logo className="sm:h-12 h-10 w-auto transition-colors duration-300 ease-in-out" />
-                </div>
-                <button
+                {/* <button
                     type="button"
                     className="md:hidden"
                     aria-label={isMenuOpen ? "Close navigation menu" : "Open navigation menu"}
@@ -50,23 +46,23 @@ export default function NavBar({ darkText = false }: { darkText?: boolean }) {
                         className="h-7 w-7"
                         aria-hidden="true"
                     />
-                </button>
-                <ul className="hidden md:flex md:items-center md:gap-8">
+                </button> */}
+                <ul className="flex items-center gap-6 sm:gap-10 tracking-wider">
                     <li className="transition-colors duration-300 ease-in-out hover:text-[#E8D8D8]">
                         <Link href="/">HOME</Link>
                     </li>
                     <li className="transition-colors duration-300 ease-in-out hover:text-[#E8D8D8]">
-                        <Link href="/AboutUs">ABOUT US</Link>
+                        <Link href="/Gallery">GALLERY</Link>
                     </li>
                     <li className="transition-colors duration-300 ease-in-out hover:text-[#E8D8D8]">
                         <Link href="/FAQs">FAQs</Link>
                     </li>
                     <li className="transition-colors duration-300 ease-in-out hover:text-[#E8D8D8]">
-                        <Link href="/ContactUs">CONTACT US</Link>
+                        <Link href="/ContactUs">CONTACT</Link>
                     </li>
                 </ul>
             </main>
-            <ul
+            {/* <ul
                 className={`absolute left-0 top-full z-10 flex w-full flex-col gap-4 overflow-hidden px-4 py-5 text-[#3A4235] transition-[background-color,backdrop-filter,max-height,opacity] duration-300 ease-in-out md:hidden ${glass} ${
                     isMenuOpen
                         ? "pointer-events-auto max-h-60 opacity-100"
@@ -85,7 +81,7 @@ export default function NavBar({ darkText = false }: { darkText?: boolean }) {
                 <li className="transition-colors duration-300 ease-in-out hover:text-[#E8D8D8]">
                     <Link href="/ContactUs">CONTACT US</Link>
                 </li>
-            </ul>
+            </ul> */}
         </nav>
     );
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import { Icon } from "@iconify/react";
-import { useEffect, useState } from "react";
+import { useRef } from "react";
 import ScrollReveal from "./ScrollReveal";
 
 const testimonials = [
@@ -28,42 +28,59 @@ const testimonials = [
 ];
 
 export default function TestimonialSection() {
-    const [activeIndex, setActiveIndex] = useState(0);
-    const testimonial = testimonials[activeIndex];
+    const trackRef = useRef<HTMLDivElement>(null);
 
-    useEffect(() => {
-        const interval = window.setInterval(() => {
-            setActiveIndex((index) => (index + 1) % testimonials.length);
-        }, 2000);
-
-        return () => window.clearInterval(interval);
-    }, []);
+    // Scrolls one card at a time; 16 = the gap-4 between cards
+    function scrollCards(direction: 1 | -1) {
+        const track = trackRef.current;
+        const card = track?.firstElementChild;
+        if (!track || !card) return;
+        track.scrollBy({ left: direction * (card.clientWidth + 16), behavior: "smooth" });
+    }
 
     return (
-        <main className="flex min-h-screen w-full items-start justify-center bg-[#E5E5E5] px-6 pb-16 pt-34 text-[#3C4032] sm:px-10 lg:px-16">
-            <ScrollReveal className="w-full container">
-                <section className="flex w-full container flex-col">
-                    <p className="text-xl font-bold uppercase tracking-widest text-[#3A4235]/90">Testimonials</p>
-                    <article
-                        key={activeIndex}
-                        className="mx-auto mt-8 flex min-h-[calc(100vh-13rem)] w-full max-w-4xl flex-col items-center justify-center text-center md:mt-9"
-                        aria-live="polite"
+        <main className="flex min-h-[75vh] w-full items-center justify-center bg-soft-white px-6 pb-16 pt-16 text-walnut sm:px-10 lg:px-16">
+            <ScrollReveal className="container w-full">
+                <section className="flex w-full flex-col items-center">
+                    <p className="text-lg font-bold uppercase tracking-widest text-moss-green sm:text-xl">Testimonials</p>
+                    <h2 className="mt-1 text-center text-2xl font-bold uppercase sm:text-3xl">A space for your stories.</h2>
+
+                    <div
+                        ref={trackRef}
+                        role="region"
+                        aria-label="Guest testimonials"
+                        tabIndex={0}
+                        className="mt-10 flex w-full snap-x snap-mandatory gap-4 overflow-x-auto scroll-smooth scrollbar-none [&::-webkit-scrollbar]:hidden"
                     >
-                        <div className="flex gap-1 text-[#E8BD22]" aria-label="5 out of 5 stars">
-                            {Array.from({ length: 5 }, (_, starIndex) => (
-                                <Icon
-                                    key={starIndex}
-                                    icon="material-symbols:star"
-                                    className="h-7 w-7 sm:h-8 sm:w-8"
-                                    aria-hidden="true"
-                                />
-                            ))}
-                        </div>
-                        <p className="mt-8 max-w-4xl text-lg leading-[1.55] text-[#3C4032]/90 sm:text-xl">
-                            &quot;{testimonial.quote}&quot;
-                        </p>
-                        <p className="mt-14 text-sm sm:text-base">{testimonial.author}</p>
-                    </article>
+                        {testimonials.map(({ quote, author }) => (
+                            <article
+                                key={author}
+                                className="flex w-full shrink-0 snap-start flex-col rounded-xl bg-beige p-5 md:w-[calc((100%-1rem)/2)] lg:w-[calc((100%-2rem)/3)]"
+                            >
+                                <p className="text-sm font-medium">{author}</p>
+                                <p className="mt-4 text-sm leading-relaxed">&quot;{quote}&quot;</p>
+                                <div className="mt-auto flex gap-0.5 self-end pt-3 text-moss-green" role="img" aria-label="5 out of 5 stars">
+                                    {Array.from({ length: 5 }, (_, i) => (
+                                        <Icon key={i} icon="material-symbols:star" className="h-4 w-4" aria-hidden="true" />
+                                    ))}
+                                </div>
+                            </article>
+                        ))}
+                    </div>
+
+                    <div className="mt-8 flex gap-3">
+                        {([["Previous testimonial", "chevron-left", -1], ["Next testimonial", "chevron-right", 1]] as const).map(([label, icon, direction]) => (
+                            <button
+                                key={label}
+                                type="button"
+                                onClick={() => scrollCards(direction)}
+                                aria-label={label}
+                                className="flex h-11 w-11 items-center justify-center rounded-full border border-moss-green text-moss-green transition hover:bg-moss-green hover:text-beige focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-moss-green"
+                            >
+                                <Icon icon={`material-symbols:${icon}`} className="h-6 w-6" aria-hidden="true" />
+                            </button>
+                        ))}
+                    </div>
                 </section>
             </ScrollReveal>
         </main>
